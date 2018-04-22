@@ -7,7 +7,7 @@ import Shelf from './components/Shelf'
 class BooksApp extends React.Component {
 
   state = {
-    shelves: ['Currently Reading', 'Want to Read', 'Read'],
+    shelves: [{friendlyName:'Currently Reading', name:'currentlyReading'}, {friendlyName:'Want to Read', name:'wantToRead'}, {friendlyName:'Read', name:'read'}],
     query: '',
     books: [],
     searchResults: [],
@@ -17,8 +17,9 @@ class BooksApp extends React.Component {
 
   componentDidMount() {
     BooksAPI.getAll()
-      .then((shelvesObject) => console.log(shelvesObject))
+      .then((shelvesObject) => this.setState({books: shelvesObject}))
       .then(() => {
+        console.log(this.state.books);
         this.setState({loading: false});
       })
       .catch((e) => {
@@ -26,8 +27,9 @@ class BooksApp extends React.Component {
         return []})
   }
 
-  renderCategory(category){
-    return <Shelf name={category} books={[{name:'',id:1},{name:'',id:2}]} />;
+  renderCategory(shelf){
+    const books = this.state.books.filter(item => item.shelf === shelf.name);
+    return <Shelf shelfItem={shelf} books={books} key={shelf.name} />;
   }
 
   render() {

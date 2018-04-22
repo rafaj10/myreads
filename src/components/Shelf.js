@@ -6,12 +6,12 @@ class Shelf extends Component {
   render() {
     return (
       <div className="bookshelf">
-        <h2 className="bookshelf-title">{this.props.name}</h2>
+        <h2 className="bookshelf-title">{this.props.shelfItem.friendlyName}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
             {this.props.books.map((item) => (
               <li key={item.id}>
-                <Book />
+                <Book bookItem={item} />
               </li>
             ))
             }
@@ -23,7 +23,7 @@ class Shelf extends Component {
 }
 
 Shelf.propTypes = {
-  name: PropTypes.string.isRequired,
+  shelfItem: PropTypes.object.isRequired,
   books: PropTypes.array.isRequired
 }
 
