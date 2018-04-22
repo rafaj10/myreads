@@ -10,6 +10,11 @@ body, .app {
 
 /* main page */
 
+.loading-list {
+  padding: 20px;
+  text-align: center;
+}
+
 .list-books-title {
   padding: 10px 0;
   background: #2e7c31;
