@@ -1,6 +1,7 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
+import ReactLoading from 'react-loading';
 import Shelf from './components/Shelf'
 
 class BooksApp extends React.Component {
@@ -51,7 +52,7 @@ class BooksApp extends React.Component {
             </div>
 
             {this.state.loading ? (
-              <div className='loading-list'>Wait Loading...</div>
+              <ReactLoading type='bubbles' color='#2e7c31' height={300} width={300} className="loading-list" />
             ) : (
               <div className="list-books-content">
                 <div>

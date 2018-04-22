@@ -11,6 +11,7 @@ body, .app {
 /* main page */
 
 .loading-list {
+  margin: auto;
   padding: 20px;
   text-align: center;
 }
