@@ -1,8 +1,10 @@
-import React from 'react'
-import * as BooksAPI from './BooksAPI'
-import './App.css'
+import React from 'react';
+import * as BooksAPI from './BooksAPI';
+import './App.css';
 import {Route, Link} from 'react-router-dom'
+import {debounce} from "lodash";
 import ReactLoading from 'react-loading';
+import Book from './components/Book';
 import Shelf from './components/Shelf'
 
 class BooksApp extends React.Component {
@@ -12,8 +14,7 @@ class BooksApp extends React.Component {
     query: '',
     books: [],
     searchResults: [],
-    loading: true,
-    showSearchPage: false
+    loading: true
   }
 
   componentDidMount() {
@@ -33,6 +34,26 @@ class BooksApp extends React.Component {
     return <Shelf shelfItem={shelf} books={books} key={shelf.name} />;
   }
 
+  handleSearch(shelvesObject) {
+    if(shelvesObject && shelvesObject.length > 0){
+      console.log(shelvesObject);
+      this.setState({searchResults: shelvesObject})
+    }
+  }
+
+  cleanSearch(){
+    this.setState({searchResults: [], query: ''})
+  }
+
+  updateQuery = (query) => {
+    this.setState({ query: query })
+    BooksAPI.search(this.state.query)
+      .then((shelvesObject) => this.handleSearch(shelvesObject))
+      .catch((e) => {
+        console.log(e);
+        return []})
+  }
+
   render() {
     return (
       <div className="app">
@@ -44,13 +65,26 @@ class BooksApp extends React.Component {
                 <div className="search-books-bar">
                   <Link
                     to='/'
+                    onClick={() => (this.cleanSearch())}
                     className='close-search' >Close</Link>
                   <div className="search-books-input-wrapper">
-                    <input type="text" placeholder="Search by title or author"/>
+                    <input
+                      type="text"
+                      placeholder="Search by title or author"
+                      value={this.state.query}
+                      onChange={(event) => this.updateQuery(event.target.value)}
+                    />
                   </div>
                 </div>
                 <div className="search-books-results">
-                  <ol className="books-grid"></ol>
+                  <ol className="books-grid">
+                    {this.state.searchResults.map((item) => (
+                      <li key={item.id}>
+                        <Book bookItem={item} />
+                      </li>
+                    ))
+                    }
+                  </ol>
                 </div>
               </div>
             )}/>
@@ -76,7 +110,7 @@ class BooksApp extends React.Component {
 
                 <div className="open-search">
                   <Link
-                    to={`/search/${this.state.query}`}
+                    to={`/search`}
                   >Add a book</Link>
                 </div>
               </div>

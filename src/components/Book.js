@@ -12,15 +12,15 @@ class Book extends Component {
     return (
       <div className='book'>
         <div className='book-top'>
-          <div
+          { this.props.bookItem.imageLinks && (<div
             className='book-cover'
             title={this.props.bookItem.id}
             style={{
               width: 128,
               height: 192,
-              backgroundImage: `url(${this.props.bookItem.imageLinks.smallThumbnail})`
+              backgroundImage: `url(${this.props.bookItem.imageLinks.smallThumbnail || this.props.bookItem.imageLinks.thumbnail})`
             }}>
-          </div>
+          </div> )}
 
           <div className='book-shelf-changer'>
             <form>
