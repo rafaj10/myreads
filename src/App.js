@@ -1,6 +1,7 @@
 import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
+import {Route, Link} from 'react-router-dom'
 import ReactLoading from 'react-loading';
 import Shelf from './components/Shelf'
 
@@ -35,39 +36,51 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <div className="search-books">
-            <div className="search-books-bar">
-              <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
-              <div className="search-books-input-wrapper">
-                <input type="text" placeholder="Search by title or author"/>
-              </div>
-            </div>
-            <div className="search-books-results">
-              <ol className="books-grid"></ol>
-            </div>
-          </div>
-        ) : (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-
-            {this.state.loading ? (
-              <ReactLoading type='bubbles' color='#2e7c31' height={300} width={300} className="loading-list" />
-            ) : (
-              <div className="list-books-content">
-                <div>
-                  { this.state.shelves.map((item) => this.renderCategory(item)) }
+          <Route
+            exact
+            path="/search/"
+            render={() => (
+              <div className="search-books">
+                <div className="search-books-bar">
+                  <Link
+                    to='/'
+                    className='close-search' >Close</Link>
+                  <div className="search-books-input-wrapper">
+                    <input type="text" placeholder="Search by title or author"/>
+                  </div>
+                </div>
+                <div className="search-books-results">
+                  <ol className="books-grid"></ol>
                 </div>
               </div>
-            )}
+            )}/>
 
-            <div className="open-search">
-              <a onClick={() => this.setState({ showSearchPage: true })}>Add a book</a>
-            </div>
-          </div>
-        )}
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <div className="list-books">
+                <div className="list-books-title">
+                  <h1>MyReads</h1>
+                </div>
+
+                {this.state.loading ? (
+                  <ReactLoading type='bubbles' color='#2e7c31' height={300} width={300} className="loading-list" />
+                ) : (
+                  <div className="list-books-content">
+                    <div>
+                      { this.state.shelves.map((item) => this.renderCategory(item)) }
+                    </div>
+                  </div>
+                )}
+
+                <div className="open-search">
+                  <Link
+                    to={`/search/${this.state.query}`}
+                  >Add a book</Link>
+                </div>
+              </div>
+            )}/>
       </div>
     )
   }
