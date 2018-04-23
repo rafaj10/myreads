@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
+import * as BooksAPI from '../BooksAPI';
 
 class Book extends Component {
 
   handleChange(event) {
     const newShelf=event.target.value;
     console.log(newShelf);
+    BooksAPI.update(this.props.bookItem, newShelf)
+      .then((shelvesObject) => console.log(shelvesObject))
+      .catch((e) => {
+        console.log(e);
+        return []})
   }
 
   render() {
@@ -24,7 +30,7 @@ class Book extends Component {
 
           <div className='book-shelf-changer'>
             <form>
-              <select value={this.props.bookItem.shelf} onChange={this.handleChange}>
+              <select value={this.props.bookItem.shelf} onChange={this.handleChange.bind(this)}>
                 <option disabled>Move to...</option>
                 <option value='currentlyReading'>Currently Reading</option>
                 <option value='wantToRead'>Want to Read</option>

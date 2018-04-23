@@ -2,7 +2,6 @@ import React from 'react';
 import * as BooksAPI from './BooksAPI';
 import './App.css';
 import {Route, Link} from 'react-router-dom'
-import {debounce} from "lodash";
 import ReactLoading from 'react-loading';
 import Book from './components/Book';
 import Shelf from './components/Shelf'
@@ -47,11 +46,13 @@ class BooksApp extends React.Component {
 
   updateQuery = (query) => {
     this.setState({ query: query })
-    BooksAPI.search(this.state.query)
-      .then((shelvesObject) => this.handleSearch(shelvesObject))
-      .catch((e) => {
-        console.log(e);
-        return []})
+    if(this.state.query.length > 1){
+      BooksAPI.search(this.state.query)
+        .then((shelvesObject) => this.handleSearch(shelvesObject))
+        .catch((e) => {
+          console.log(e);
+          return []})
+    }
   }
 
   render() {
