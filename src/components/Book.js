@@ -16,7 +16,7 @@ class Book extends Component {
       .then((shelvesObject) => this.doUpdate(newShelf))
       .catch((e) => {
         this.setState({ loading: false});
-        console.log(e);
+        alert('Sorry apparently something went wrong :/ try again');
         return []})
   }
 

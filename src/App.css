@@ -42,6 +42,12 @@ body, .app {
   }
 }
 
+.bookshelf-nothing {
+  text-align: center;
+  margin-top: 5%;
+}
+
+
 .bookshelf-title {
   border-bottom: 1px solid #dedede;
 }
@@ -103,6 +109,11 @@ body, .app {
   background-repeat: no-repeat;
   background-size: 28px;
   font-size: 0;
+}
+
+.close-nothing {
+  text-align: center;
+  margin-top: 10%;
 }
 
 .search-books-results {

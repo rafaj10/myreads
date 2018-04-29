@@ -19,7 +19,7 @@ class Shelf extends Component {
           </ol>
         </div>
         ) : (
-            <div> Nothing here </div>
+            <div className='bookshelf-nothing'>Nothing here :/</div>
           ) }
       </div>
     )
@@ -28,7 +28,8 @@ class Shelf extends Component {
 
 Shelf.propTypes = {
   shelfItem: PropTypes.object.isRequired,
-  books: PropTypes.array.isRequired
+  books: PropTypes.array.isRequired,
+  updateBook: PropTypes.func.isRequired
 }
 
 export default Shelf

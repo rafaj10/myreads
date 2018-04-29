@@ -14,7 +14,8 @@ class BooksApp extends React.Component {
     books: [],
     searchResults: [],
     searchHasStart: false,
-    loading: true
+    loading: true,
+    loadingSearch: false
   }
 
   componentDidMount() {
@@ -22,7 +23,7 @@ class BooksApp extends React.Component {
       .then((shelvesObject) => this.setState({books: shelvesObject}))
       .then(() => { this.setState({loading: false}); })
       .catch((e) => {
-        console.log(e);
+        alert('Sorry apparently something went wrong :/ try again');
         return []})
   }
 
@@ -32,12 +33,14 @@ class BooksApp extends React.Component {
   }
 
   updateQuery = (query) => {
-    this.setState({ query: query, searchHasStart:true });
+    this.setState({ query: query });
     if(this.state.query.length > 1){
+      this.setState({ query: query, searchHasStart:true, loadingSearch:true });
       BooksAPI.search(this.state.query)
         .then((shelvesObject) => this.handleSearch(shelvesObject))
         .catch((e) => {
-          console.log(e);
+          this.setState({ loadingSearch:false });
+          alert('Sorry apparently something went wrong :/ try again');
           return []})
     }
   }
@@ -58,10 +61,10 @@ class BooksApp extends React.Component {
   }
 
   handleSearch(shelvesObject) {
+    this.setState({ loadingSearch:false });
     if(shelvesObject.error){
       this.setState({searchResults: []})
     }else if(shelvesObject && shelvesObject.length > 0){
-      console.log(JSON.stringify(shelvesObject));
       this.setState({searchResults: this.compareAndUpdateBooks(shelvesObject)})
     }
   }
@@ -103,8 +106,11 @@ class BooksApp extends React.Component {
                   </div>
                 </div>
                 <div className="search-books-results">
-                  {this.state.searchHasStart && this.state.searchResults.length === 0 ? (
-                    <div>Not found</div>
+                  {this.state.loadingSearch && (
+                    <ReactLoading type='bubbles' color='#2e7c31' height={150} width={150} className="loading-list" />
+                  )}
+                  {!this.state.loadingSearch && this.state.searchHasStart && this.state.searchResults.length === 0 ? (
+                    <div className='close-nothing'>Oops nothing found try again :)</div>
                   ) : (
                     <ol className="books-grid">
                       {this.state.searchResults.map((item) => (
