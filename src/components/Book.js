@@ -4,14 +4,25 @@ import * as BooksAPI from '../BooksAPI';
 
 class Book extends Component {
 
+  constructor(props){
+    super(props);
+    this.state = { loading: false };
+  }
+
   handleChange(event) {
+    this.setState({ loading: true });
     const newShelf=event.target.value;
-    console.log(newShelf);
     BooksAPI.update(this.props.bookItem, newShelf)
-      .then((shelvesObject) => console.log(shelvesObject))
+      .then((shelvesObject) => this.doUpdate(newShelf))
       .catch((e) => {
+        this.setState({ loading: false});
         console.log(e);
         return []})
+  }
+
+  doUpdate(newShelf){
+    this.setState({ loading: false});
+    this.props.updateBook(this.props.bookItem, newShelf);
   }
 
   render() {
@@ -25,8 +36,9 @@ class Book extends Component {
               width: 128,
               height: 192,
               backgroundImage: `url(${this.props.bookItem.imageLinks.smallThumbnail || this.props.bookItem.imageLinks.thumbnail})`
-            }}>
-          </div> )}
+            }}> </div> )}
+
+          { this.state.loading && (<div className='book-loading'>updating ...</div>)}
 
           <div className='book-shelf-changer'>
             <form>
@@ -50,7 +62,8 @@ class Book extends Component {
 }
 
 Book.propTypes = {
-  bookItem: PropTypes.object.isRequired
+  bookItem: PropTypes.object.isRequired,
+  updateBook: PropTypes.func.isRequired
 }
 
 export default Book

@@ -167,6 +167,19 @@ body, .app {
   cursor: pointer;
 }
 
+.book-loading {
+  position: absolute;
+  background-color: black;
+  width: 128px;
+  height: 192px;
+  line-height: 192px;
+  margin-top: 8px;
+  top:0px;
+  left:0px;
+  opacity:0.6;
+  color:white;
+  text-align:center;
+}
 /* book cover */
 
 .book-cover {

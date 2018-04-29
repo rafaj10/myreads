@@ -13,16 +13,14 @@ class BooksApp extends React.Component {
     query: '',
     books: [],
     searchResults: [],
+    searchHasStart: false,
     loading: true
   }
 
   componentDidMount() {
     BooksAPI.getAll()
       .then((shelvesObject) => this.setState({books: shelvesObject}))
-      .then(() => {
-        console.log(this.state.books);
-        this.setState({loading: false});
-      })
+      .then(() => { this.setState({loading: false}); })
       .catch((e) => {
         console.log(e);
         return []})
@@ -30,22 +28,11 @@ class BooksApp extends React.Component {
 
   renderCategory(shelf){
     const books = this.state.books.filter(item => item.shelf === shelf.name);
-    return <Shelf shelfItem={shelf} books={books} key={shelf.name} />;
-  }
-
-  handleSearch(shelvesObject) {
-    if(shelvesObject && shelvesObject.length > 0){
-      console.log(shelvesObject);
-      this.setState({searchResults: shelvesObject})
-    }
-  }
-
-  cleanSearch(){
-    this.setState({searchResults: [], query: ''})
+    return <Shelf shelfItem={shelf} books={books} updateBook={this.updateBook.bind(this)} key={shelf.name} />;
   }
 
   updateQuery = (query) => {
-    this.setState({ query: query })
+    this.setState({ query: query, searchHasStart:true });
     if(this.state.query.length > 1){
       BooksAPI.search(this.state.query)
         .then((shelvesObject) => this.handleSearch(shelvesObject))
@@ -53,6 +40,44 @@ class BooksApp extends React.Component {
           console.log(e);
           return []})
     }
+  }
+
+  updateBook(bookItem, newShelf){
+    const books = this.state.books;
+    var newShelvesObjects = books.map(item =>
+      item = books.find(book => item.id === bookItem.id) ? {...item, shelf: newShelf} : item
+    );
+    if(!newShelvesObjects.find(book => book.id === bookItem.id)){
+      bookItem.shelf = newShelf;
+      newShelvesObjects.push(bookItem);
+    }
+    this.setState({books: newShelvesObjects});
+    if(this.state.searchResults.length > 0){
+      this.setState({searchResults: this.compareAndUpdateBooks(this.state.searchResults)});
+    }
+  }
+
+  handleSearch(shelvesObject) {
+    if(shelvesObject.error){
+      this.setState({searchResults: []})
+    }else if(shelvesObject && shelvesObject.length > 0){
+      console.log(JSON.stringify(shelvesObject));
+      this.setState({searchResults: this.compareAndUpdateBooks(shelvesObject)})
+    }
+  }
+
+  compareAndUpdateBooks(shelvesObject){
+    const { books } = this.state;
+    const newShelvesObject = shelvesObject.map(item =>
+      item = { ...item, shelf:
+        books.find(book => book.id === item.id) ? books.find(book => book.id === item.id).shelf : 'none'
+      }
+    );
+    return newShelvesObject;
+  }
+
+  cleanSearch(){
+    this.setState({ searchResults: [], query: '', searchHasStart: false });
   }
 
   render() {
@@ -78,14 +103,18 @@ class BooksApp extends React.Component {
                   </div>
                 </div>
                 <div className="search-books-results">
-                  <ol className="books-grid">
-                    {this.state.searchResults.map((item) => (
-                      <li key={item.id}>
-                        <Book bookItem={item} />
-                      </li>
-                    ))
-                    }
-                  </ol>
+                  {this.state.searchHasStart && this.state.searchResults.length === 0 ? (
+                    <div>Not found</div>
+                  ) : (
+                    <ol className="books-grid">
+                      {this.state.searchResults.map((item) => (
+                        <li key={item.id}>
+                          <Book bookItem={item} updateBook={this.updateBook.bind(this)} />
+                        </li>
+                      ))
+                      }
+                    </ol>
+                  )}
                 </div>
               </div>
             )}/>

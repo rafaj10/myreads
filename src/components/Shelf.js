@@ -7,16 +7,20 @@ class Shelf extends Component {
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{this.props.shelfItem.friendlyName}</h2>
+        {this.props.books.length > 0 ? (
         <div className="bookshelf-books">
           <ol className="books-grid">
             {this.props.books.map((item) => (
               <li key={item.id}>
-                <Book bookItem={item} />
+                <Book bookItem={item} updateBook={this.props.updateBook} />
               </li>
             ))
             }
           </ol>
         </div>
+        ) : (
+            <div> Nothing here </div>
+          ) }
       </div>
     )
   }
