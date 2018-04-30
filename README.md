@@ -8,10 +8,6 @@ To run this project, open your terminal and follow this steps:
 
 ### `npm start`
 
-Or run using.<br>
-
-### `yarn start`
-
 ## How to Use the Web App
 * Books are sorted into three categories (or Shelves): Currently Reading, Want to Read and Read
 * To change a book's category or remove a book from the list, click on the green button on  the book cover
