@@ -1,30 +1,31 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types';
 import Book from './Book'
 
-class Shelf extends Component {
-  render() {
-    return (
-      <div className="bookshelf">
-        <h2 className="bookshelf-title">{this.props.shelfItem.friendlyName}</h2>
-        {this.props.books.length > 0 ? (
+const Shelf = function (props) {
+  return (
+    <div className="bookshelf">
+      <h2
+        className="bookshelf-title">{props.shelfItem.friendlyName}</h2>
+      {props.books.length > 0 ? (
         <div className="bookshelf-books">
           <ol className="books-grid">
-            {this.props.books.map((item) => (
+            {props.books.map((item) => (
               <li key={item.id}>
-                <Book bookItem={item} updateBook={this.props.updateBook} />
+                <Book bookItem={item}
+                      updateBook={props.updateBook}/>
               </li>
             ))
             }
           </ol>
         </div>
-        ) : (
-            <div className='bookshelf-nothing'>Nothing here :/</div>
-          ) }
-      </div>
-    )
-  }
-}
+      ) : (
+        <div className='bookshelf-nothing'>Nothing here
+          :/</div>
+      )}
+    </div>
+  );
+};
 
 Shelf.propTypes = {
   shelfItem: PropTypes.object.isRequired,
