@@ -14,6 +14,10 @@ class SearchPage extends Component {
     loadingSearch: false
   }
 
+  componentWillUnmount() {
+    this.cleanSearch();
+  }
+
   cleanSearch(){
     this.setState({ searchResults: [], query: '', searchHasStart: false });
   }
@@ -26,7 +30,7 @@ class SearchPage extends Component {
         .then((shelvesObject) => this.handleSearch(shelvesObject))
         .catch((e) => {
           this.setState({ loadingSearch:false });
-          alert('Sorry apparently something went wrong :/ try again');
+          alert('Sorry apparently something went wrong :/ try again AQ ' + JSON.stringify(e));
           return []})
     }
   }
@@ -51,7 +55,6 @@ class SearchPage extends Component {
         <div className="search-books-bar">
           <Link
             to='/'
-            onClick={() => (this.cleanSearch())}
             className='close-search' >Close</Link>
           <div className="search-books-input-wrapper">
             <input
